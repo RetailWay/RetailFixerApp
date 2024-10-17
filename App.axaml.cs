@@ -1,6 +1,10 @@
+using System;
+using System.Net.Http;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using RetailFixer.Configurations;
+using RetailFixer.Windows;
 using Serilog;
 using Serilog.Core;
 
@@ -8,12 +12,11 @@ namespace RetailFixer;
 
 public partial class App : Application
 {
-    public readonly static Logger Logger;
+    public static readonly Logger Logger = new LoggerConfiguration().WriteTo.File(".log").CreateLogger();
+    public static readonly HttpClient Http = new() { Timeout = new TimeSpan(0, 0, 3) };
     
-    static App()
-    {
-        Logger = new LoggerConfiguration().WriteTo.File(".log").CreateLogger();
-    }
+    public static FiscalConfiguration Fiscal;
+    public static OperatorConfiguration Operator;
     
     public override void Initialize()
     {

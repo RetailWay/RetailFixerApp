@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="167" Width="300"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0"
+        x:Class="RetailFixer.Windows.OperatorWizard">
+        <Canvas Margin="10">
+                <WrapPanel>
+                        <TextBlock Text="Оператор:" VerticalAlignment="Center" Width="100"/>
+                        <ComboBox Width="180" SelectedIndex="0" IsEnabled="False">
+                                <ComboBoxItem Content="OFDru"/>
+                        </ComboBox>
+                </WrapPanel>
+                <WrapPanel Canvas.Top="36">
+                        <TextBlock Text="Токен:" VerticalAlignment="Center" Width="100"/>
+                        <TextBox Width="180"/>
+                </WrapPanel>
+                <WrapPanel Canvas.Top="36" IsVisible="False">
+                        <TextBlock Text="Логин:" VerticalAlignment="Center" Width="100"/>
+                        <TextBox Width="180"/>
+                </WrapPanel>
+                <WrapPanel Canvas.Top="72" IsVisible="False">
+                        <TextBlock Text="Пароль:" VerticalAlignment="Center" Width="100"/>
+                        <TextBox Width="180"/>
+                </WrapPanel>
+                <Button Content="Отмена" Width="78" HorizontalContentAlignment="Center"  Canvas.Bottom="0" Canvas.Right="100"/>
+                <Button Content="Применить" Canvas.Bottom="0" Canvas.Right="0"/>
+        </Canvas>
+</Window>

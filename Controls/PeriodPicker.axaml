@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             x:Class="RetailFixer.Controls.PeriodPicker">
+    <StackPanel>
+        <TextBlock Text="Период сканирования:" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal">
+            <CalendarDatePicker CustomDateFormatString="dd-MM-yyyy" SelectedDateFormat="Custom" SelectedDate="{Binding StartDate}" DisplayDateEnd="{Binding EndDate}"/>
+            <TextBlock VerticalAlignment="Center" Text=" - "/>
+            <CalendarDatePicker CustomDateFormatString="dd-MM-yyyy" SelectedDateFormat="Custom" SelectedDate="{Binding EndDate}" DisplayDateStart="{Binding StartDate}"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

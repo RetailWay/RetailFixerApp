@@ -1,9 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="RetailFixer.MainWindow"
-        Title="RetailFixer">
-    Welcome to Avalonia!
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
+        Width="600" Height="450" x:Class="RetailFixer.MainWindow"
+        Title="Исправление расхождений">
+        <Canvas>
+                <CalendarDatePicker SelectedDateFormat="Custom" CustomDateFormatString="dd-MM-yyyy" Watermark="dd-MM-yyyy"/>
+                <!--Button Click="OpenFiscalConfigurator" Content="Подключить ККМ"/>
+                <Button Click="OpenOperatorConfigurator" Content="Подключить ОФД"/-->
+        </Canvas>
 </Window>
