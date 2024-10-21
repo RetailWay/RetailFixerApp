@@ -1,11 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:c="clr-namespace:RetailFixer.Controls"
         Width="600" Height="450" x:Class="RetailFixer.MainWindow"
         Title="Исправление расхождений">
-        <Canvas>
-                <CalendarDatePicker SelectedDateFormat="Custom" CustomDateFormatString="dd-MM-yyyy" Watermark="dd-MM-yyyy"/>
-                <!--Button Click="OpenFiscalConfigurator" Content="Подключить ККМ"/>
-                <Button Click="OpenOperatorConfigurator" Content="Подключить ОФД"/-->
-        </Canvas>
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto">
+                <c:SearchProperties Grid.Column="0" Grid.Row="0"/>
+                <DataGrid Grid.Column="1" Grid.Row="0">
+                        
+                </DataGrid>
+        </Grid>
 </Window>

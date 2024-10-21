@@ -1,30 +1,30 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="167" Width="300"
-        ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaTitleBarHeightHint="0"
+        Height="167" Width="300" Title="Подключение к ОФД"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         x:Class="RetailFixer.Windows.OperatorWizard">
         <Canvas Margin="10">
                 <WrapPanel>
                         <TextBlock Text="Оператор:" VerticalAlignment="Center" Width="100"/>
-                        <ComboBox Width="180" SelectedIndex="0" IsEnabled="False">
-                                <ComboBoxItem Content="OFDru"/>
-                        </ComboBox>
+                        <ComboBox Width="180" SelectedIndex="{Binding OperatorId, Mode=TwoWay}" IsEnabled="False" ItemsSource="{Binding Operators}"/>
+                                <!--ComboBoxItem Content="OFDru"/>
+                                <ComboBoxItem Content="Saly ОФД (Сбис)"/>
+                                <ComboBoxItem Content="Платформа ОФД"/>
+                        </ComboBox-->
                 </WrapPanel>
                 <WrapPanel Canvas.Top="36">
                         <TextBlock Text="Токен:" VerticalAlignment="Center" Width="100"/>
-                        <TextBox Width="180"/>
+                        <TextBox Width="180" Text="{Binding Token, Mode=TwoWay}"/>
                 </WrapPanel>
                 <WrapPanel Canvas.Top="36" IsVisible="False">
                         <TextBlock Text="Логин:" VerticalAlignment="Center" Width="100"/>
-                        <TextBox Width="180"/>
+                        <TextBox Width="180" Text="{Binding Login, Mode=TwoWay}"/>
                 </WrapPanel>
                 <WrapPanel Canvas.Top="72" IsVisible="False">
                         <TextBlock Text="Пароль:" VerticalAlignment="Center" Width="100"/>
-                        <TextBox Width="180"/>
+                        <TextBox Width="180" Text="{Binding Password, Mode=TwoWay}"/>
                 </WrapPanel>
-                <Button Content="Отмена" Width="78" HorizontalContentAlignment="Center"  Canvas.Bottom="0" Canvas.Right="100"/>
-                <Button Content="Применить" Canvas.Bottom="0" Canvas.Right="0"/>
+                <Button Content="Отмена" Canvas.Bottom="0" Canvas.Right="100" Click="Cancel"/>
+                <Button Content="Применить" Canvas.Bottom="0" Canvas.Right="0" Click="Apply"/>
         </Canvas>
 </Window>

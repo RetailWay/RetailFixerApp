@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="167" Width="400" Title="Подключение к ККМ"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        x:Class="RetailFixer.Windows.FrontolWizard">
+    <Canvas Margin="10">
+        <WrapPanel>
+            <TextBlock Text="Редакция:" VerticalAlignment="Center" Width="200"/>
+            <ComboBox Width="180" SelectedIndex="{Binding SoftId, Mode=TwoWay}">
+                <ComboBoxItem Content="FxPOS 3"/>
+            </ComboBox>
+        </WrapPanel>
+        <WrapPanel Canvas.Top="36">
+            <TextBlock Text="Путь главной БД:" VerticalAlignment="Center" Width="200"/>
+            <TextBox Width="145" Text="{Binding PathMain, Mode=TwoWay}"/>
+            <Button Width="30" Content="..." Margin="5,0,0,0" Click="BrowseMain"/>
+        </WrapPanel>
+        <WrapPanel Canvas.Top="72">
+            <TextBlock Text="Путь журнальной БД:" VerticalAlignment="Center" Width="200"/>
+            <TextBox Width="145" Text="{Binding PathLog, Mode=TwoWay}"/>
+            <Button Width="30" Content="..." Margin="5,0,0,0" Click="BrowseLog"/>
+        </WrapPanel>
+        <Button Content="Отмена" Width="78" HorizontalContentAlignment="Center"  Canvas.Bottom="0" Canvas.Right="100" Click="Close"/>
+        <Button Content="Применить" Canvas.Bottom="0" Canvas.Right="0" Click="Apply"/>
+    </Canvas>
+</Window>

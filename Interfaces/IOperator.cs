@@ -4,6 +4,7 @@ namespace RetailFixer.Interfaces;
 
 public interface IOperator
 {
-    public string BaseUri { get; }
-    public Task<bool> CheckInfo();
+    public string Name { get; }
+    public Task<bool> CheckInfo(string token);
+    public Task PullReceipts();
 }

@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:c="clr-namespace:RetailFixer.Converters"
+             mc:Ignorable="d" Width="264" Height="500"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             x:Class="RetailFixer.Controls.SearchProperties">
+    <UserControl.Resources>
+        <c:DateOnlyConverter x:Key="DateConverter"/>
+    </UserControl.Resources>
+    <WrapPanel Orientation="Vertical">
+        <TextBlock HorizontalAlignment="Center" Text="Диапазон сканирования"/>
+        <WrapPanel Margin="0,5,0,0">
+            <CalendarDatePicker Width="125" SelectedDate="{Binding BeginPeriod, Converter={StaticResource DateConverter}, Mode=TwoWay}"/>
+            <TextBlock Text=" - " VerticalAlignment="Center" FontWeight="Bold"/>
+            <CalendarDatePicker Width="125" SelectedDate="{Binding EndPeriod, Converter={StaticResource DateConverter}, Mode=TwoWay}"/>
+        </WrapPanel>
+        <TextBlock Text="Настройки подключений" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+        <WrapPanel Margin="0,5,0,0" HorizontalAlignment="Center">
+            <Button Content="ККМ" Width="87" HorizontalContentAlignment="Center" Click="OpenFiscalWizard"/>
+            <Button Content="ОФД" Width="87" HorizontalContentAlignment="Center" Click="OpenOperatorWizard"/>
+            <Button Content="Frontol" Width="87" HorizontalContentAlignment="Center" Click="OpenFrontolWizard"/>
+        </WrapPanel>
+    </WrapPanel>
+</UserControl>

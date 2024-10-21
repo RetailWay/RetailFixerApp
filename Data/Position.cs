@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using RetailFixer.Enums;
+
 namespace RetailFixer.Data;
 
-public struct Position
+public class Position
 {
     /// <summary>Наименование</summary>
     public string Name;
@@ -11,12 +14,14 @@ public struct Position
     /// <summary>Количество (1 шт = 1000)</summary>
     public ulong Quantity;
     /// <summary>Единица измерения</summary>
-    public byte Measure;
+    public MeasureUnit Measure;
     /// <summary>Ставка НДС</summary>
     public byte TaxRate;
     /// <summary>Тип позиции</summary>
-    public byte Type;
+    public PositionType Type;
     /// <summary>Способ оплаты</summary>
-    public byte PaymentType;
-    
+    public PaymentMethod PaymentType;
+    /// <summary>Скрытые параметры</summary>
+    public Dictionary<string, string> InnerProperties;
+    public string this[string param] => InnerProperties[param];
 }
