@@ -64,8 +64,8 @@ public sealed partial class FrontolWizard : Window, INotifyPropertyChanged
     private void Apply(object? s, RoutedEventArgs e)
     {
         Settings.UpdateSoft(0, PathMain, PathLog);
-        FxPOS pos = new(PathMain);
-        pos.Start(new DateOnly(2024, 07, 16), new DateOnly(2024, 07, 20));
+        Settings.SoftWare.OpenConnection(PathMain);
+        Settings.SoftWare.Start(new DateOnly(2024, 07, 16), new DateOnly(2024, 07, 20));
         Close();
     }
 

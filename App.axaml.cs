@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RetailFixer.Data;
 using RetailFixer.Fiscals;
 using RetailFixer.Interfaces;
+using RetailFixer.Soft;
 using Serilog;
 using Serilog.Core;
 
@@ -36,6 +37,7 @@ public partial class App : Application
         var provider = services.BuildServiceProvider();
         Settings.TrySetAvailableDrivers(provider.GetServices<IFiscal>());
         Settings.TrySetAvailableOperators(provider.GetServices<IOperator>());
+        Settings.TrySetSoftWare(provider.GetService<FxPOS>());
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
@@ -46,6 +48,7 @@ public partial class App : Application
 
     private static void AddFiscalServices(ServiceCollection collection)
     {
+        collection.AddSingleton<FxPOS>();
         foreach (var inter in new[] {typeof(IFiscal), typeof(IOperator)})
         {
             foreach (var t in Assembly.GetTypes().Where(i => i.GetInterface(nameof(inter)) is not null))

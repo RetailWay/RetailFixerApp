@@ -6,6 +6,7 @@ using RetailFixer.Data;
 using RetailFixer.Enums;
 using RetailFixer.Exceptions;
 using RetailFixer.Interfaces;
+using RetailFixer.Soft;
 using RetailFixer.Utils;
 
 namespace RetailFixer;
@@ -20,6 +21,7 @@ public static class Settings
     public static IFiscal FiscalDriver { get; set; } = null!;
     public static (DateTime from, DateTime to) SearchPeriod { get; private set; } = (DateTime.Today, DateTime.Today);
     public static FiscalInfo Info { get; private set; } = new("", "", "");
+    public static FxPOS SoftWare { get; private set; } = null!;
 
     /// <summary>
     /// Обновление настройки подключения ККТ
@@ -37,9 +39,9 @@ public static class Settings
         FiscalConnect = CheckData.Check(new FiscalConnectionData(type, address, port));
 
     public static void UpdateOfd(IOperator ofd, string? token = null, string? authData = null)
-    {
+    {/*
         if (token is null && authData is null)
-            throw new AllOptionalArgumentsNullException(nameof(token), nameof(authData));
+            throw new AllOptionalArgumentsNullException(nameof(token), nameof(authData));*/
         Ofd = new OperatorSettings(ofd, token, authData);
     }
 
@@ -59,6 +61,12 @@ public static class Settings
     {
         if (AvailableOperators.Length > 0) return false;
         AvailableOperators = operators.ToArray();
+        return true;
+    }
+    public static bool TrySetSoftWare(FxPOS? ware)
+    {
+        if (ware is null || SoftWare != null!) return false; 
+        SoftWare = ware;
         return true;
     }
 }
