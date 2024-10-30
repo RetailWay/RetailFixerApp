@@ -1,16 +1,21 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Nodes;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
+using RetailFixer.Attributes;
 using RetailFixer.Data;
 using RetailFixer.Enums;
 using RetailFixer.Interfaces;
 using static RetailFixer.Utils.OperatorAddon;
 
-namespace RetailFixer.Operators;
+namespace RetailFixer.Operators.OfdRu;
 
-public sealed class OfdRu : IOperator
+[DevelopStatus(DevelopStatus.Testing)]
+public sealed class Parser : IOperator
 {
-    public string Name => "OFDru";
+    public static string Name => "OFDru";
     public async Task<bool> CheckInfo(string token)
     {
         try
@@ -43,10 +48,10 @@ public sealed class OfdRu : IOperator
     public async Task PullReceipts()
     {
         for (
-            var d = Settings.SearchPeriod.from; 
-            d <= Settings.SearchPeriod.to; 
+            var d = Settings.SearchPeriod.Start; 
+            d <= Settings.SearchPeriod.End; 
             d += TimeSpan.FromDays(1))
-            await PullReceipts(d);
+            await PullReceipts(d.DateTime);
     }
 
     private static async Task PullReceipts(DateTime day)
@@ -57,54 +62,45 @@ public sealed class OfdRu : IOperator
             $"kkt/{Settings.Info.RegId}/receipts-info?" +
             $"dateFrom={day:yyyy-MM-dd}T00:00:00&" +
             $"dateTo={day:yyyy-MM-dd}T23:59:59&" +
-            $"AuthToken={Settings.Ofd.AuthToken}");
-        var resp = await App.Http.GetAsync(uri);
-        var content = JsonNode.Parse(await resp.Content.ReadAsStringAsync());
-        if (content["Data"] is not JsonArray receipts) return;
-        foreach(var info in receipts)
+            $"AuthToken={Settings.Ofd.Auth}");
+        var msg = await App.Http.GetAsync(uri);
+        var content = await msg.Content.ReadAsStringAsync();
+        var resp = JsonConvert.DeserializeObject<(string Status, OfdRu.Data.Receipt[]? Data)>(content);
+        if (resp.Data is null) return;
+        foreach(var info in resp.Data)
         {
             var receipt = new Receipt
             {
-                Number = uint.Parse(info["DocNumber"].GetValue<string>()),
-                DateTime = info["DocDateTime"].GetValue<DateTime>(),
-                Items = [],
-                Payment = (info["CashSumm"].GetValue<uint>(),
-                    info["ECashSumm"].GetValue<uint>(),
-                    info["CreditSumm"].GetValue<uint>(),
-                    info["PrepaidSumm"].GetValue<uint>()),
+                Number = info.DocNumber,
+                DateTime = info.DocDateTime,
+                Items = new List<Position>((int)info.Depth),
+                Payment = new Payment(
+                    info.CashSumm, info.ECashSumm,
+                    info.CreditSumm, info.PrepaidSumm),
                 Subject = PullSubjects.Operator,
-                OpCode = ConvertOpcode(info["OperationType"].GetValue<string>())
+                OpCode = new OperationConverter().Convert(info.OperationType.ToLower()),
+                TotalSum = info.TotalSumm,
+                FiscalSign = info.DecimalFiscalSign,
+                Operator = info.Operator,
             };
-            foreach (var pos in info["Items"].AsArray())
+            foreach(var pos in info.Items)
             {
                 receipt.Items.Add(new Position
                 {
-                    Name = pos["Name"].GetValue<string>(),
-                    Price = pos["Price"].GetValue<uint>(),
-                    Total = pos["Total"].GetValue<uint>(),
-                    Quantity = (uint)Math.Round(pos["Quantity"].GetValue<double>()*1000,0),
-                    Measure = (MeasureUnit)pos["ProductUnitOfMeasure"].GetValue<byte>(),
-                    Type = (PositionType)pos["SubjectType"].GetValue<byte>(),
-                    PaymentType = (PaymentMethod)pos["CalculationMethod"].GetValue<byte>(),
-                    TaxRate = pos["NDS_Rate"].GetValue<byte>(),
+                    Name = pos.Name,
+                    Price = pos.Price,
+                    Total = pos.Total,
+                    Quantity = (uint)Math.Round(pos.Quantity*1000,0),
+                    Measure = (MeasureUnit)pos.ProductUnitOfMeasure,
+                    Type = (PositionType)pos.SubjectType,
+                    PaymentType = (PaymentMethod)pos.CalculationMethod,
+                    TaxRate = new TaxRateConverter().Convert(pos.NDS_Rate)
                 });
             }
             App.Receipts.Add(receipt);
         }
+
+        Debug.Print(null);
     }
-
-    private static byte ConvertOpcode(string op) =>
-        (byte)((op.EndsWith("ncome") ? 1 : 3) + (op.StartsWith("Refund") ? 1 : 0));
-
-    private static byte ConvertTaxRate(byte src) =>
-        src switch
-        {
-            1 => 20,
-            2 => 10,
-            3 => 120,
-            4 => 110,
-            5 => 0,
-            6 => 255,
-            _ => throw new ArgumentOutOfRangeException(nameof(src)) // todo При появлении БАГа 
-        };
 }
+

@@ -8,12 +8,14 @@ public class Receipt
 {
     public uint Number = 0;
     public List<Position> Items = [];
-    public byte OpCode = 0;
+    public ReceiptOperation OpCode = 0;
     public DateTime DateTime = DateTime.MinValue;
-    public (uint c, uint e, uint cr, uint pre) Payment = (0, 0, 0, 0);
+    public Payment Payment = new ();
     public Dictionary<string, string> InnerProperties = [];
     public PullSubjects Subject = 0;
-    public ulong TotalSum = 0;
+    public uint TotalSum = 0;
+    public string Operator = "";
+    public string FiscalSign = "";
 
     public string this[string param] => InnerProperties[param];
 }

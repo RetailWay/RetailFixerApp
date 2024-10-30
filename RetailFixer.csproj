@@ -1,79 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-        <ApplicationManifest>app.manifest</ApplicationManifest>
-        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <AssemblyVersion>0.0.1</AssemblyVersion>
-        <FileVersion>0.0.1</FileVersion>
-        <NeutralLanguage>ru-RU</NeutralLanguage>
+      <OutputType>WinExe</OutputType>
+      <TargetFramework>net8.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+      <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+      <AssemblyVersion>0.0.1.0</AssemblyVersion>
+      <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+      <FileVersion>$(AssemblyVersion)</FileVersion>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
       <PlatformTarget>x86</PlatformTarget>
-      <Prefer32bit>true</Prefer32bit>
+      <DebugType>none</DebugType>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <PlatformTarget>x86</PlatformTarget>
-      <Prefer32bit>true</Prefer32bit>
-    </PropertyGroup>
-    <ItemGroup>
-      <COMReference Include="Fptr10Lib">
-        <VersionMinor>0</VersionMinor>
-        <VersionMajor>1</VersionMajor>
-        <Guid>0b9a023d-410b-4cb2-aa1f-61fee7cc29d6</Guid>
-        <Lcid>0</Lcid>
-        <WrapperTool>tlbimp</WrapperTool>
-        <Isolated>false</Isolated>
-        <EmbedInteropTypes>true</EmbedInteropTypes>
-      </COMReference>
-      <COMReference Include="FprnM1C">
-        <VersionMinor>0</VersionMinor>
-        <VersionMajor>8</VersionMajor>
-        <Guid>e4795282-3564-11d4-8e97-0080c87c930a</Guid>
-        <Lcid>0</Lcid>
-        <WrapperTool>tlbimp</WrapperTool>
-        <Isolated>false</Isolated>
-        <EmbedInteropTypes>true</EmbedInteropTypes>
-      </COMReference>
-      <COMReference Include="DrvFRLib">
-        <VersionMinor>17</VersionMinor>
-        <VersionMajor>5</VersionMajor>
-        <Guid>332c8050-469c-4b4d-a192-68cd3cb252ba</Guid>
-        <Lcid>0</Lcid>
-        <WrapperTool>tlbimp</WrapperTool>
-        <Isolated>false</Isolated>
-        <EmbedInteropTypes>true</EmbedInteropTypes>
-      </COMReference>
-    </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.1.3" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.3" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-        <PackageReference Include="Serilog" Version="4.0.2" />
-        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+        <PackageReference Include="Avalonia" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Serilog" Version="4.1.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
         <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
         <PackageReference Include="System.IO.Ports" Version="8.0.0" />
         <PackageReference Include="System.ServiceProcess.ServiceController" Version="8.0.1" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.3" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Windows\Alert.axaml.cs">
-        <DependentUpon>Alert.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Windows\FrontolWizard.axaml.cs">
-        <DependentUpon>FrontolWizard.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Attributes\" />
+      <AvaloniaResource Include="Assets\*\*" />
     </ItemGroup>
 </Project>

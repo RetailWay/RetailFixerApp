@@ -1,26 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using RetailFixer.Enums;
 using RetailFixer.Exceptions;
+using RetailFixer.Interfaces;
 
 namespace RetailFixer.Windows;
 
-public sealed partial class FiscalWizard : Window, INotifyPropertyChanged
+public sealed partial class FiscalWizard : Window
 {
-    public byte DriverId
-    {
-        get => (byte)_driverId;
-        set
-        {
-            if (_driverId == value) return;
-            _driverId = value;
-            OnPropertyChanged();
-        }
-    }
     public byte ConnType
     {
         get => (byte)_connType;
@@ -81,18 +74,35 @@ public sealed partial class FiscalWizard : Window, INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+    public int InstalledIndex
+    {
+        get => _installedIndex;
+        set
+        {
+            if (_installedIndex == value) return;
+            _installedIndex = value;
+            OnPropertyChanged();
+        }
+    }
+    private protected IEnumerable<string> InstalledNames { get; init; }
 
-    private int _driverId = 0;
     private FiscalConnectionType _connType = FiscalConnectionType.Usb;
     private string _serialPort = "";
     private string _ipAddress = "";
     private string _macAddress = "";
     private string _usbPath = "";
     private ushort? _tcpPort;
+    private static Type[] Installed = [];
+    private Type Selected => Installed[_installedIndex];
+    private int _installedIndex = 0;
+    
+    protected new event PropertyChangedEventHandler? PropertyChanged;
 
-    internal string[] SerialPorts => System.IO.Ports.SerialPort.GetPortNames();
-    internal string[] BluetoothMacs => [];
-    internal string[] Drivers { get; init; }
+    private protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    internal string[] SerialPorts { get; init; }
+    internal string[] BtAddresses { get; init; }
 
 
     private string Address => _connType switch
@@ -103,29 +113,24 @@ public sealed partial class FiscalWizard : Window, INotifyPropertyChanged
         FiscalConnectionType.Bluetooth => _macAddress,
         _ => ""
     };
-    
-    public new event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
     public FiscalWizard()
     {
-        Drivers = Settings.AvailableDrivers.Select(i => i.Name).ToArray();
+        InstalledNames = Installed.Select(i => (string)i.GetProperty("Name")!.GetValue(null)!);
+        SerialPorts = System.IO.Ports.SerialPort.GetPortNames();
+        BtAddresses = [];
         InitializeComponent();
     }
     
     private void Apply(object? s, RoutedEventArgs e)
     {
-        var driver = Settings.AvailableDrivers[_driverId];
+        var driver = (IFiscal)Activator.CreateInstance(Selected)!;
         try
         {
             var prepConf = Settings.FiscalConnect;
             Settings.UpdateFiscal(_connType, Address, _tcpPort);
             if (driver.Connect())
             {
-                Settings.FiscalDriver = driver;
-                Close();
+                Close(driver);
             }
             else
             {
@@ -138,15 +143,23 @@ public sealed partial class FiscalWizard : Window, INotifyPropertyChanged
             var message = ex switch
             {
                 ArgumentNullException ane => $"Отсутствует обязательное значение: {ane.ParamName}",
-                InvalidEnumArgumentException => "Произошёл баг! Сообщите разработчику! (Код: 001)",
+                TypeConnectionNotSupportedException => "Данный тип подключения не поддерживается выбранным драйвером.",
                 NetworkAddressFormatException => "Введённый IP-адрес не соотвествует формату",
                 ControlAddressFormatException => "Произошёл баг! Сообщите разработчику! (Код: 002)",
+                KktException => $"Возникла ошибка ККТ: {ex.Message}",
                 _ => "Произошла неизвестная ошибка"
             };
-            new Alert("Не удалось применить настройки", message, AlertLevel.Error).ShowDialog(this);
+            Alert.Show("Не удалось применить настройки", message, AlertLevel.Error);
             App.Logger.Error($"При применении настроек произошла ошибка: {ex.Message}");
         }
     }
+    
+    private protected void Close(object? s, RoutedEventArgs e) => Close(null);
 
-    private void Close(object? s, RoutedEventArgs e) => Close();
+    public static void SetInstalled(IEnumerable<Type> types)
+    {
+        if (Installed.Length > 0)
+            throw new ReadOnlyException();
+        Installed = types.ToArray();
+    }
 }

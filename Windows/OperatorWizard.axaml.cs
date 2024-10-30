@@ -1,23 +1,17 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using RetailFixer.Interfaces;
 
 namespace RetailFixer.Windows;
 
-public partial class OperatorWizard : Window, INotifyPropertyChanged
+public partial class OperatorWizard : Window
 {
-    public byte OperatorId
-    {
-        get => _ofdId;
-        set
-        {
-            if (_ofdId == value) return;
-            _ofdId = value;
-            OnPropertyChanged();
-        }
-    }
     public string Token
     {
         get => _token;
@@ -49,30 +43,54 @@ public partial class OperatorWizard : Window, INotifyPropertyChanged
         }
     }
 
-    private byte _ofdId = 0;
     private string _token = "";
     private string _login = "";
     private string _passwd = "";
-    
-    public string[] Operators { get; init; } 
-    
+
     public OperatorWizard()
     {
-        Operators = Settings.AvailableOperators.Select(i => i.Name).ToArray();
+        InstalledNames = Installed.Select(i => (string)i.GetProperty("Name")!.GetValue(null)!);
         InitializeComponent();
     }
-    
-    public new event PropertyChangedEventHandler? PropertyChanged;
 
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-    private async void Apply(object? sender, RoutedEventArgs e)
+    private static Type[] Installed = [];
+    private Type Selected => Installed[_installedIndex];
+    private protected int InstalledIndex
     {
-        var ofd = Settings.AvailableOperators[_ofdId];
-        if (!await ofd.CheckInfo(_token)) return;
-        Settings.UpdateOfd(ofd, _token, $"{_login}\n{_passwd}");
-        Close();
+        get => _installedIndex;
+        set
+        {
+            if (_installedIndex == value) return;
+            _installedIndex = value;
+            OnPropertyChanged();
+        }
     }
-    private void Cancel(object? sender, RoutedEventArgs e) => Close();
+    private protected IEnumerable<string> InstalledNames { get; init; }
+    
+    private int _installedIndex = 0;
+    
+    protected new event PropertyChangedEventHandler? PropertyChanged;
+
+    private protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    
+    private protected void Close(object? s, RoutedEventArgs e) => Close(null);
+
+    public static void SetInstalled(IEnumerable<Type> types)
+    {
+        if (Installed.Length > 0)
+            throw new ReadOnlyException();
+        Installed = types.ToArray();
+    }
+    
+    private async void Apply(object? s, RoutedEventArgs e)
+    {
+        var ofd = (IOperator)Activator.CreateInstance(Selected)!;
+        if (!await ofd.CheckInfo(_token)) return;
+        var isAuth = ofd.GetType().GetInterface(nameof(IAuthorization)) is not null;
+        Settings.SetAuthDataOperator(isAuth ? $"{_login}{_passwd}" : _token);
+        Settings.UpdateInfo("", "", "");
+        await ofd.PullReceipts();
+        Close(ofd);
+    }
 }

@@ -10,7 +10,7 @@
     <Canvas Margin="10">
         <WrapPanel>
             <TextBlock Text="Драйвер ККМ:" VerticalAlignment="Center" Width="200"/>
-            <ComboBox Width="180" SelectedIndex="{Binding DriverId, Mode=TwoWay}" ItemsSource="{Binding Drivers}"/>
+            <ComboBox Width="180" SelectedIndex="{Binding InstalledIndex, Mode=TwoWay}" ItemsSource="{Binding InstalledNames}"/>
         </WrapPanel>
         <WrapPanel Canvas.Top="36">
             <TextBlock Text="Тип подключения:" VerticalAlignment="Center" Width="200"/>
@@ -35,7 +35,7 @@
         </WrapPanel>
         <WrapPanel Canvas.Top="72" IsVisible="{Binding ConnType, Converter={StaticResource ActivationConverter}, ConverterParameter=3 }">
             <TextBlock Text="MAC-Адрес:" VerticalAlignment="Center" Width="200"/>
-            <ComboBox Width="180" SelectedValue="{Binding MacAddress, Mode=TwoWay}" ItemsSource="{Binding BluetoothMacs}"/>
+            <ComboBox Width="180" SelectedValue="{Binding MacAddress, Mode=TwoWay}" ItemsSource="{Binding BtAddresses}"/>
         </WrapPanel>
         <WrapPanel Canvas.Top="72" IsVisible="{Binding ConnType, Converter={StaticResource ActivationConverter}, ConverterParameter=10 }">
             <TextBlock Text="USB-Адрес:" VerticalAlignment="Center" Width="200"/>

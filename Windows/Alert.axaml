@@ -1,12 +1,15 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="450" Height="NaN"
+        Width="450" CanResize="False" SizeToContent="Height"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0"
         x:Class="RetailFixer.Windows.Alert">
-	<StackPanel Margin="10" x:Name="Panel">
-		<TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="20" VerticalAlignment="Center"/>
-		<TextBlock Text="{Binding Text}" TextWrapping="WrapWithOverflow"/>
-		<TextBlock Text="{Binding TagType}" VerticalAlignment="Center" FontSize="10" FontStyle="Italic"/>
-		<Button Click="btnClose" Content="OK" HorizontalAlignment="Right"/>
+	<StackPanel Margin="10">
+		<TextBlock Text="{Binding Title, Mode=OneWay}" FontSize="20" VerticalAlignment="Center" FontFamily="{StaticResource UbuntuMono}" FontWeight="Bold"/>
+		<TextBlock Text="{Binding Text, Mode=OneWay}" TextWrapping="WrapWithOverflow" FontFamily="{StaticResource UbuntuMono}"/>
+		<TextBlock Text="{Binding TagType, Mode=OneWay}" VerticalAlignment="Center" FontSize="10" FontFamily="{StaticResource UbuntuMono}" FontStyle="Italic"/>
+		<Button Click="Close" Content="OK" HorizontalAlignment="Right"/>
 	</StackPanel>
 </Window>

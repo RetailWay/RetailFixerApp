@@ -1,12 +1,52 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        xmlns:c="clr-namespace:RetailFixer.Controls"
-        Width="600" Height="450" x:Class="RetailFixer.MainWindow"
-        Title="Исправление расхождений">
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto">
-                <c:SearchProperties Grid.Column="0" Grid.Row="0"/>
-                <DataGrid Grid.Column="1" Grid.Row="0">
-                        
-                </DataGrid>
-        </Grid>
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:s="using:RetailFixer" Loaded="Loaded"
+        Width="600" Height="300" x:Class="RetailFixer.MainWindow"
+        Title="Исправление расхождений" CanResize="False">
+        <Window.Styles>
+                <Style Selector="Label">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Height" Value="37"/>
+                </Style>
+                <Style Selector="Button">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="Width" Value="125"/>
+                </Style>
+        </Window.Styles>
+        <StackPanel Orientation="Vertical" Margin="5" >
+                <StackPanel Orientation="Horizontal">
+                        <Label Content="1. Настроить драйвер ККТ и подключиться к кассовому аппарату." Width="465"/>
+                        <Button Content="ККТ" Click="ShowDeviceSettings"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <Label Content="2. Настроить подключение к ОФД." Width="465"/>
+                        <Button Content="ОФД" Click="ShowOperatorSettings"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <Label Content="3. Настроить подключение к фронт-системе." Width="465"/>
+                        <Button Content="Фронт-система" Click="ShowFrontWareSettings"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,3,0,3">
+                        <Label Content="4. Выбрать период сканирования." Width="293"/>
+                        <StackPanel Orientation="Vertical" DataContext="{x:Static s:Settings.SearchPeriod}">
+                                <DatePicker SelectedDate="{Binding Start, Mode=TwoWay}"/>
+                                <GridSplitter Height="6"/>
+                                <DatePicker SelectedDate="{Binding End, Mode=TwoWay}" MaxYear="{x:Static sys:DateTimeOffset.Now}"/>
+                        </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <Label Content="5. Запустить выгрузку чеков из источников." Width="465"/>
+                        <Button Content="Выгрузка" Click="Read"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <Label Content="6. Выбрать действие для расхождений." Width="465"/>
+                        <Button Content="Расхождения" Click="ShowMissings"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <Label Content="7. Запустить загрузку исправления." Width="465"/>
+                        <Button Content="Загрузить" Click="Write"/>
+                </StackPanel>
+        </StackPanel>
 </Window>

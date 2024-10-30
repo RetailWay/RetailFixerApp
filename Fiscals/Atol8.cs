@@ -1,51 +1,36 @@
-using System;
-using FprnM1C;
+/*using System;
+using RetailFixer.Attributes;
 using RetailFixer.Data;
+using RetailFixer.Enums;
 using RetailFixer.Interfaces;
 
 namespace RetailFixer.Fiscals;
 
-// todo Ðåêîìåíäóåòñÿ èñïîëüçîâàòü îáû÷íûé ÷åê, à íå ÷åê-êîððåêöèè (ÒÎËÜÊÎ îäíó ïîçèöèþ ìîæíî äîáàâèòü)
-
+// todo Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´ÑƒÐµÑ‚ÑÑ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒ Ð¾Ð±Ñ‹Ñ‡Ð½Ñ‹Ð¹ Ñ‡ÐµÐº, Ð° Ð½Ðµ Ñ‡ÐµÐº-ÐºÐ¾Ñ€Ñ€ÐµÐºÑ†Ð¸Ð¸ (Ð¢ÐžÐ›Ð¬ÐšÐž Ð¾Ð´Ð½Ñƒ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ Ð¼Ð¾Ð¶Ð½Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ)
+[DevelopStatus(DevelopStatus.ToDo)]
 public sealed class Atol8 : IFiscal
 {
-    public string Name => "FprnM45 (Atol v.8)";
-    private readonly FprnM45 _driver;
+    public string Name => "FprnM (Atol v.8)";
+    public bool IsConnected { get; }
+    public SessionStage? Session { get; }
+    public static InstalledServices IsInstalled { get; }
 
-    public Atol8()
+    public void SetTypeReceipt(bool isElectronically)
     {
         throw new NotImplementedException();
-        _driver = new FprnM45();
     }
 
-    public bool IsConnected { get; }
-    public bool? SessionStage
+    public bool OpenSession()
     {
-        get
-        {
-            _driver.RegisterNumber = 18;
-            _driver.GetRegister();
-            return (_driver.SessionOpened, _driver.SessionExceedLimit) switch
-            {
-                (false, _) => false,
-                (true, false) => true,
-                (true, true) => null
-            };
-        }
+        throw new NotImplementedException();
     }
-    public void SetIsElectronically(bool value) => _driver.CheckMode = value ? 0 : 1;
-
-    public bool OpenSession() => _driver.OpenSession() == 0;
 
     public bool CloseSession()
     {
-        _driver.RecordType = 1;
-        return _driver.Report() == 0;
+        throw new NotImplementedException();
     }
 
-    public bool CancelReceipt() => _driver.CancelCheck() == 0;
-
-    public uint ConvertTaxRate(int raw)
+    public bool CancelReceipt()
     {
         throw new NotImplementedException();
     }
@@ -62,9 +47,7 @@ public sealed class Atol8 : IFiscal
 
     public bool OpenReceipt(uint opcode, DateTime dt)
     {
-        //todo correction data
-        _driver.CheckType = (int)opcode + 6;
-        return _driver.OpenCheck() == 0;
+        throw new NotImplementedException();
     }
 
     public bool Registration(Position position)
@@ -72,8 +55,14 @@ public sealed class Atol8 : IFiscal
         throw new NotImplementedException();
     }
 
-    public bool CloseReceipt(uint sumCash = 0, uint sumEcash = 0, uint sumCredit = 0, uint sumPrepaid = 0)
+    public bool CloseReceipt(Payment payment)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Dispose()
     {
         throw new NotImplementedException();
     }
 }
+*/

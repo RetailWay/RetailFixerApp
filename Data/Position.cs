@@ -12,7 +12,7 @@ public class Position
     /// <summary>Стоимость в копейках</summary>
     public uint Total;
     /// <summary>Количество (1 шт = 1000)</summary>
-    public ulong Quantity;
+    public uint Quantity;
     /// <summary>Единица измерения</summary>
     public MeasureUnit Measure;
     /// <summary>Ставка НДС</summary>

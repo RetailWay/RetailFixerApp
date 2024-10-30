@@ -6,11 +6,8 @@
         <Canvas Margin="10">
                 <WrapPanel>
                         <TextBlock Text="Оператор:" VerticalAlignment="Center" Width="100"/>
-                        <ComboBox Width="180" SelectedIndex="{Binding OperatorId, Mode=TwoWay}" IsEnabled="False" ItemsSource="{Binding Operators}"/>
-                                <!--ComboBoxItem Content="OFDru"/>
-                                <ComboBoxItem Content="Saly ОФД (Сбис)"/>
-                                <ComboBoxItem Content="Платформа ОФД"/>
-                        </ComboBox-->
+                        <ComboBox Width="180" SelectedIndex="{Binding InstalledIndex, Mode=TwoWay}" 
+                                  ItemsSource="{Binding InstalledNames}"/>
                 </WrapPanel>
                 <WrapPanel Canvas.Top="36">
                         <TextBlock Text="Токен:" VerticalAlignment="Center" Width="100"/>
@@ -24,7 +21,7 @@
                         <TextBlock Text="Пароль:" VerticalAlignment="Center" Width="100"/>
                         <TextBox Width="180" Text="{Binding Password, Mode=TwoWay}"/>
                 </WrapPanel>
-                <Button Content="Отмена" Canvas.Bottom="0" Canvas.Right="100" Click="Cancel"/>
+                <Button Content="Отмена" Canvas.Bottom="0" Canvas.Right="100" Click="Close"/>
                 <Button Content="Применить" Canvas.Bottom="0" Canvas.Right="0" Click="Apply"/>
         </Canvas>
 </Window>

@@ -3,8 +3,8 @@ using System;
 namespace RetailFixer.Enums;
 
 [Flags]
-public enum PullSubjects
+public enum PullSubjects: byte
 {
     Operator = 1,
-    FxPos = 2,
+    FrontSystem = 2,
 }

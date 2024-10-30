@@ -1,75 +1,66 @@
 using System;
 using RetailFixer.Data;
+using RetailFixer.Enums;
 
 namespace RetailFixer.Interfaces;
 
-public interface IFiscal
+public interface IFiscal: ISoftWare
 {
-    /// <summary>
-    /// Название драйвера
-    /// </summary>
-    public string Name { get; }
     /// <summary>
     /// Присутствует ли подключение между ККТ и драйвером?
     /// </summary>
     public bool IsConnected { get; }
     /// <summary>
-    /// true при открытой смене, false при закрытой смене, иначе null
+    /// null если не удалось получить статус смены, иначе одно из значений <see cref="SessionStage"/>  
     /// </summary>
-    public bool? SessionStage { get; }
+    public SessionStage? Session { get; }
     /// <summary>
-    /// Печатать фискальные документы
+    /// Установка вида фискальных документов
     /// </summary>
-    /// <param name="value">true для работы с электронными фискальными документами</param>
-    public void SetIsElectronically(bool value);
+    /// <param name="value">true если не нужно печатать физический фискальный документ, иначе false</param>
+    public void SetTypeReceipt(bool isElectronically);
     /// <summary>
-    /// 
+    /// Открытие смены
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
     public bool OpenSession();
     /// <summary>
-    /// 
+    /// Закрытие смены
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
     public bool CloseSession();
     /// <summary>
-    /// 
+    /// Отмена фискального чека
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
     public bool CancelReceipt();
     /// <summary>
-    /// 
+    /// Подключение к ККМ
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
     public bool Connect();
     /// <summary>
-    /// 
+    /// Выгрузка информации для работы с ОФД из ККМ
     /// </summary>
-    public void PullInfo();
-    /// <param name="opcode">
-    /// Значение тега 1054:<br/>
-    /// 1 - приход<br/>
-    /// 2 - возврат прихода<br/>
-    /// 3 - расход<br/>
-    /// 4 - возврат расхода
-    /// </param>
-    /// <param name="dt">Дата и время закрытия чека</param>
-    /// <returns></returns>
-    public bool OpenReceipt(uint opcode, DateTime dt);
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
+    public bool PullInfo();
     /// <summary>
-    /// 
+    /// Открытие фискального чека
     /// </summary>
-    /// <param name="position"></param>
-    /// <returns></returns>
+    /// <param name="opcode">Значение тега 1054 (<see cref="ReceiptOperation"/>)</param>
+    /// <param name="dt">Дата и время закрытия чека</param>
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
+    public bool OpenReceipt(ReceiptOperation opcode, DateTime dt);
+    /// <summary>
+    /// Регистрация позиции в фискальный чек
+    /// </summary>
+    /// <param name="position">Информация о позиции</param>
+    /// <seealso cref="Position"/>
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
     public bool Registration(Position position);
     /// <summary>
-    /// 
+    /// Закрытие фискального чека
     /// </summary>
-    /// <param name="sumCash"></param>
-    /// <param name="sumEcash"></param>
-    /// <param name="sumCredit"></param>
-    /// <param name="sumPrepaid"></param>
-    /// <returns></returns>
-    public bool CloseReceipt(uint sumCash = 0, uint sumEcash = 0, uint sumCredit = 0, uint sumPrepaid = 0);
+    /// <returns>true если операция выполнена успешно, иначе false</returns>
+    public bool CloseReceipt(Payment payment);
 }
-

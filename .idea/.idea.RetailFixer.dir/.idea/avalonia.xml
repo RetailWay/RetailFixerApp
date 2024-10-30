@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="App.axaml" value="RetailFixer.csproj" />
+        <entry key="Controls/CustomDataGrid.axaml" value="RetailFixer.csproj" />
+        <entry key="MainWindow.axaml" value="RetailFixer.csproj" />
+        <entry key="Windows/Alert.axaml" value="RetailFixer.csproj" />
+        <entry key="Windows/FiscalWizard.axaml" value="RetailFixer.csproj" />
+        <entry key="Windows/FrontWareWizard.axaml" value="RetailFixer.csproj" />
+        <entry key="Windows/OperatorWizard.axaml" value="RetailFixer.csproj" />
+        <entry key="Windows/ReceiptsWindow.axaml" value="RetailFixer.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

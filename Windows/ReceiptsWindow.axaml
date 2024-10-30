@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:RetailFixer.Converters"
+        Height="300" Width="1000" Title="ReceiptsWindow"
+        Closing="Window_OnClosing" 
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        x:Class="RetailFixer.Windows.ReceiptsWindow">
+        <Window.Resources>
+                <c:ReceiptSourceToColorConverter x:Key="SourceToColor"/>
+                <c:ReceiptActionToColorConverter x:Key="ActionToColor"/>
+        </Window.Resources>
+        <DataGrid Height="{Binding $parent.Height}" Width="{Binding $parent.Width}" 
+                  IsReadOnly="True" ItemsSource="{Binding Receipts}">
+                <DataGrid.ContextMenu>
+                        <ContextMenu>
+                                <Button Content="Синхронизировать"/>
+                                <Button Content="Аннулировать"/>
+                                <Button Content="Игнорировать"/>
+                        </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Сумма" Width="10">
+                                <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                                <TextBlock Text="{Binding Action}"
+                                                           Background="{Binding Action,
+                                                           Converter={StaticResource ActionToColor}}"/>
+                                        </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="ID" Width="75" Binding="{Binding Id}"/>
+                        <DataGridTextColumn Header="Дата / Время" Width="200" Binding="{Binding DateTime}"/>
+                        <DataGridTextColumn Header="Сумма" Width="150" Binding="{Binding Sum}"/>
+                        <DataGridTemplateColumn Header="Источник" Width="200">
+                                <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                                <TextBlock Text="{Binding Source}" 
+                                                           Background="{Binding Source, 
+                                                           Converter={StaticResource SourceToColor}}"/>
+                                        </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                </DataGrid.Columns>
+        </DataGrid>
+</Window>

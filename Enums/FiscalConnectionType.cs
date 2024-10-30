@@ -5,7 +5,5 @@ public enum FiscalConnectionType: byte
     SerialPort = 0,
     Usb = 1,
     TcpIp = 2,
-    Bluetooth = 3,
-    
-    //NotSet = 255
+    Bluetooth = 3
 }

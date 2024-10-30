@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using RetailFixer.Enums;
@@ -6,20 +7,13 @@ namespace RetailFixer.Windows;
 
 public partial class Alert : Window
 {
-    internal string Text { get; set; }
-    internal string TagType { get; set; }
+    private string Text { get; }
+    private string TagType { get; }
 
-#if DEBUG
-    public Alert()
-    {
-        Title = "Проблема с соединением";
-        Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque quis metus eget iaculis. Nulla facilisi. Curabitur rutrum libero in nunc consequat, nec venenatis lorem tincidunt. Donec nec lorem quis urna posuere volutpat vitae eu lorem. In malesuada fermentum turpis. Cras consequat neque sit amet gravida malesuada. Donec hendrerit purus";
-        TagType = "debug";
-        InitializeComponent();
-    }
-#endif
+    public static Task Show(string title, string message, AlertLevel level) =>
+        new Alert(title, message, level).ShowDialog(MainWindow.Singleton);
 
-    public Alert(string title, string message, AlertLevel level)
+    private Alert(string title, string message, AlertLevel level)
     {
         Title = title;
         Text = message;
@@ -31,8 +25,8 @@ public partial class Alert : Window
             AlertLevel.Fatal => "critical",
             _ => "debug"
         };
-        InitializeComponent(); 
+        InitializeComponent();
     }
 
-    private void btnClose(object? s, RoutedEventArgs e) => Close();
+    private void Close(object? s, RoutedEventArgs e) => Close();
 }
